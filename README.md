@@ -13,9 +13,9 @@ Native Android shopping-app prototype built with Kotlin, Jetpack Compose, Materi
 
 - Home page with promotional hero and featured products
 - Shop catalog with search, category filters, and price sorting
-- Product details, quantity selection, and wishlist toggle
-- Cart with quantity changes, remove actions, and subtotal
-- Checkout form with delivery fields, order summary, and demo confirmation
+- Product details, quantity selection, and wishlist toggle with local persistence across app launches
+- Cart with quantity changes, remove actions, subtotal, and local persistence across app launches
+- Checkout form with delivery fields, order summary, demo confirmation, and locally saved demo order history
 - Recipe inspiration and profile/help links
 - Empty states, image placeholders, cart-count badge, and add-to-cart toast feedback
 
@@ -24,7 +24,7 @@ Native Android shopping-app prototype built with Kotlin, Jetpack Compose, Materi
 - This is a native Android app; the UI is not a WebView or a React app.
 - Catalog entries are a curated sample, not a live product feed. Prices are illustrative snapshots and may change.
 - Some product images are loaded from remote HexClad CDN paths; the UI shows a placeholder when no image URL is configured. Network access is required for remote images.
-- Cart and wishlist are in-memory state and reset when the app process is recreated.
+- Cart, wishlist, and local demo order history are stored on-device using app preferences. They are not synced to an account or server.
 - Checkout is explicitly a local demo. It does not submit an order, collect card details, or process payments.
 - Authentication, customer order history, inventory, shipping calculations, and live checkout require approved HexClad commerce services and credentials.
 - Official support and policy pages open externally; their availability and URLs should be verified before release.
