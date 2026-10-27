@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 enum class NavTab { HOME, SHOP, RECIPES, WISHLIST, CART, PROFILE }
+enum class SortMode { RECOMMENDED, PRICE_LOW_TO_HIGH, PRICE_HIGH_TO_LOW }
 
 data class HexCladProduct(
     val id: String,
@@ -29,7 +30,7 @@ class HexCladViewModel : ViewModel() {
 
     var searchQuery by mutableStateOf("")
     var selectedCategory by mutableStateOf("All")
-    var sortByPriceAscending by mutableStateOf(false)
+    var sortMode by mutableStateOf(SortMode.RECOMMENDED)
 
     private val cart = mutableStateListOf<CartLine>()
     private val favorites = mutableStateListOf<String>()
@@ -61,7 +62,11 @@ class HexCladViewModel : ViewModel() {
                 (searchQuery.isBlank() || it.name.contains(searchQuery, ignoreCase = true) ||
                     it.subtitle.contains(searchQuery, ignoreCase = true))
         }
-        return if (sortByPriceAscending) filtered.sortedBy { it.price } else filtered
+        return when (sortMode) {
+            SortMode.RECOMMENDED -> filtered
+            SortMode.PRICE_LOW_TO_HIGH -> filtered.sortedBy { it.price }
+            SortMode.PRICE_HIGH_TO_LOW -> filtered.sortedByDescending { it.price }
+        }
     }
 
     fun switchTab(tab: NavTab) {
