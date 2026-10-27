@@ -139,6 +139,11 @@ fun ShopScreen(viewModel: HexCladViewModel) {
                     label = { Text(category) }
                 )
             }
+            FilterChip(
+                selected = viewModel.saleOnly,
+                onClick = { viewModel.saleOnly = !viewModel.saleOnly },
+                label = { Text("On sale") }
+            )
         }
         Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Text("${products.size} products", color = Muted, style = MaterialTheme.typography.bodySmall)
