@@ -262,6 +262,7 @@ private fun ProductCard(product: HexCladProduct, viewModel: HexCladViewModel) {
 @Composable
 fun ProductDetailScreen(product: HexCladProduct, viewModel: HexCladViewModel) {
     val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
     var quantity by remember(product.id) { mutableIntStateOf(1) }
     LazyColumn(Modifier.fillMaxSize().background(WarmWhite), contentPadding = PaddingValues(bottom = 24.dp)) {
         item {
@@ -289,7 +290,27 @@ fun ProductDetailScreen(product: HexCladProduct, viewModel: HexCladViewModel) {
                 }
                 Spacer(Modifier.height(16.dp))
                 Text(product.description, color = Ink, style = MaterialTheme.typography.bodyMedium)
-                Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    "Product-specific care, shipping eligibility, and warranty terms can vary. Check HexClad's official policy pages before purchase.",
+                    color = Muted,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(
+                        onClick = { uriHandler.openUri("https://hexclad.com/pages/refund-policy") },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("SHIPPING & RETURNS", color = Ink, style = MaterialTheme.typography.labelSmall)
+                    }
+                    TextButton(
+                        onClick = { uriHandler.openUri("https://hexclad.com/pages/warranty") },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("WARRANTY", color = Ink, style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+                Spacer(Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     OutlinedButton(onClick = { if (quantity > 1) quantity-- }, shape = RoundedCornerShape(2.dp), contentPadding = PaddingValues(8.dp)) { Icon(Icons.Default.Remove, contentDescription = "Decrease quantity") }
                     Text("$quantity", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
