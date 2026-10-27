@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
                                             badge = {
                                                 if (viewModel.cartItemCount > 0) {
                                                     Badge(containerColor = MaterialTheme.colorScheme.primary) {
-                                                        Text("${viewModel.cartItemCount}", color = Color.Black)
+                                                        Text(if (viewModel.cartItemCount > 99) "99+" else "${viewModel.cartItemCount}", color = Color.Black)
                                                     }
                                                 }
                                             }
