@@ -247,8 +247,9 @@ private fun ProductCard(product: HexCladProduct, viewModel: HexCladViewModel) {
             }
             Spacer(Modifier.height(8.dp))
             OutlinedButton(onClick = {
-                viewModel.addToCart(product)
-                Toast.makeText(context, "${product.name} added to cart", Toast.LENGTH_SHORT).show()
+                val addedQuantity = viewModel.addToCart(product)
+                val message = if (addedQuantity > 0) "${product.name} added to cart" else "Maximum quantity already in cart"
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(2.dp), contentPadding = PaddingValues(vertical = 8.dp)) {
                 Icon(Icons.Default.ShoppingBag, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(6.dp))
@@ -299,8 +300,13 @@ fun ProductDetailScreen(product: HexCladProduct, viewModel: HexCladViewModel) {
                     }
                 }
                 Button(onClick = {
-                    repeat(quantity) { viewModel.addToCart(product) }
-                    Toast.makeText(context, "$quantity × ${product.name} added to cart", Toast.LENGTH_SHORT).show()
+                    val addedQuantity = viewModel.addToCart(product, quantity)
+                    val message = when {
+                        addedQuantity == 0 -> "Maximum quantity already in cart"
+                        addedQuantity < quantity -> "$addedQuantity added; cart limit reached"
+                        else -> "$addedQuantity × ${product.name} added to cart"
+                    }
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 }, modifier = Modifier.fillMaxWidth().height(52.dp), shape = RoundedCornerShape(2.dp), colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = Color.White)) {
                     Text("ADD TO CART · ${money(product.price * quantity)}", fontWeight = FontWeight.Bold)
                 }
