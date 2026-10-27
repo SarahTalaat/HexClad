@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.RestaurantMenu
 import androidx.compose.material.icons.filled.ShoppingBag
@@ -79,6 +80,19 @@ class MainActivity : ComponentActivity() {
                                     )
                                 )
                                 NavigationBarItem(
+                                    selected = viewModel.currentTab == NavTab.WISHLIST,
+                                    onClick = { viewModel.switchTab(NavTab.WISHLIST) },
+                                    icon = { Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "Wishlist") },
+                                    label = { Text("Saved") },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = Color.Black,
+                                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                                        indicatorColor = MaterialTheme.colorScheme.primary,
+                                        unselectedIconColor = Color.Gray,
+                                        unselectedTextColor = Color.Gray
+                                    )
+                                )
+                                NavigationBarItem(
                                     selected = viewModel.currentTab == NavTab.CART,
                                     onClick = { viewModel.switchTab(NavTab.CART) },
                                     icon = {
@@ -128,6 +142,7 @@ class MainActivity : ComponentActivity() {
                                 NavTab.HOME -> HomeScreen(viewModel = viewModel)
                                 NavTab.SHOP -> ShopScreen(viewModel = viewModel)
                                 NavTab.RECIPES -> RecipeScreen(viewModel = viewModel)
+                                NavTab.WISHLIST -> WishlistScreen(viewModel = viewModel)
                                 NavTab.CART -> CartScreen(viewModel = viewModel)
                                 NavTab.PROFILE -> ProfileScreen(viewModel = viewModel)
                             }
