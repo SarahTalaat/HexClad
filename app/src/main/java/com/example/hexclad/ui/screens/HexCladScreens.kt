@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
@@ -211,13 +212,28 @@ private fun ProductCard(product: HexCladProduct, viewModel: HexCladViewModel) {
             IconButton(onClick = { viewModel.toggleFavorite(product) }, modifier = Modifier.align(Alignment.TopEnd)) {
                 Icon(if (viewModel.isFavorite(product)) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "Toggle favorite", tint = if (viewModel.isFavorite(product)) Color.Red else Ink)
             }
+            product.badge?.let { badge ->
+                Surface(
+                    modifier = Modifier.align(Alignment.TopStart).padding(8.dp),
+                    color = Ink,
+                    contentColor = Lime,
+                    shape = RoundedCornerShape(2.dp)
+                ) {
+                    Text(badge, modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                }
+            }
         }
         Column(Modifier.padding(12.dp)) {
             Text(product.name, color = Ink, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
             Spacer(Modifier.height(4.dp))
             Text(product.subtitle, color = Muted, style = MaterialTheme.typography.bodySmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
             Spacer(Modifier.height(8.dp))
-            Text(money(product.price), color = Ink, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(money(product.price), color = Ink, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                product.compareAtPrice?.takeIf { it > product.price }?.let { originalPrice ->
+                    Text(money(originalPrice), color = Muted, style = MaterialTheme.typography.bodySmall, textDecoration = TextDecoration.LineThrough)
+                }
+            }
             Spacer(Modifier.height(8.dp))
             OutlinedButton(onClick = {
                 viewModel.addToCart(product)
@@ -250,7 +266,15 @@ fun ProductDetailScreen(product: HexCladProduct, viewModel: HexCladViewModel) {
                 Text(product.name, color = Ink, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Black)
                 Text(product.subtitle, color = Muted, style = MaterialTheme.typography.bodyLarge)
                 Spacer(Modifier.height(14.dp))
-                Text(money(product.price), color = Ink, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(money(product.price), color = Ink, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                    product.compareAtPrice?.takeIf { it > product.price }?.let { originalPrice ->
+                        Text(money(originalPrice), color = Muted, style = MaterialTheme.typography.bodyMedium, textDecoration = TextDecoration.LineThrough)
+                    }
+                }
+                product.badge?.let { badge ->
+                    Text(badge, Modifier.padding(top = 4.dp), color = Ink, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                }
                 Spacer(Modifier.height(16.dp))
                 Text(product.description, color = Ink, style = MaterialTheme.typography.bodyMedium)
                 Spacer(Modifier.height(20.dp))
@@ -435,7 +459,7 @@ fun ProfileScreen(viewModel: HexCladViewModel) {
     }
 }
 
-private fun money(amount: Double): String = "$" + String.format(Locale.US, "%.2f", amount)
+private fun money(amount: Double): String = if (amount % 1.0 == 0.0) "$" + String.format(Locale.US, "%.0f", amount) else "$" + String.format(Locale.US, "%.2f", amount)
 
 
 @Composable
