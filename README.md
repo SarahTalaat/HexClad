@@ -11,8 +11,9 @@ Native Android shopping-app prototype built with Kotlin, Jetpack Compose, Materi
 
 ## Included prototype flows
 
-- Home page with promotional hero and featured products
-- Shop catalog with search, category filters, and price sorting
+- Home page with promotional hero, highlighted product photography, and featured products
+- Shop catalog with search, horizontally scrollable category filters, and price sorting
+- Sale labels and crossed-out reference prices for selected products where public HexClad listings expose comparison values
 - Product details, quantity selection, and wishlist toggle with local persistence across app launches
 - Cart with quantity changes, remove actions, subtotal, and local persistence across app launches
 - Checkout form with delivery fields, order summary, demo confirmation, and locally saved demo order history
@@ -23,7 +24,8 @@ Native Android shopping-app prototype built with Kotlin, Jetpack Compose, Materi
 
 - This is a native Android app; the UI is not a WebView or a React app.
 - Catalog entries are a curated sample, not a live product feed. Prices are illustrative snapshots and may change.
-- Some product images are loaded from remote HexClad CDN paths; the UI shows a placeholder when no image URL is configured. Network access is required for remote images.
+- Product photography is loaded remotely from HexClad/Shopify image CDNs. The UI falls back to a placeholder when an image URL is missing or a request fails; network access is required for remote images.
+- A few image URLs, sale labels, and comparison prices were matched to public HexClad product/collection listings during this update. The catalog remains a non-live snapshot: prices, offers, availability, and image URLs can change, and the remaining image references should be verified before release.
 - Cart, wishlist, and local demo order history are stored on-device using app preferences. They are not synced to an account or server.
 - Checkout is explicitly a local demo. It does not submit an order, collect card details, or process payments.
 - Authentication, customer order history, inventory, shipping calculations, and live checkout require approved HexClad commerce services and credentials.
