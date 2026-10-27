@@ -105,6 +105,12 @@ Your rules.", color = Color.White, style = MaterialTheme.typography.displaySmall
                 OutlinedButton(onClick = { viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.SHOP) }, shape = RoundedCornerShape(2.dp), modifier = Modifier.fillMaxWidth()) {
                     Text("EXPLORE THE COLLECTION", color = Ink, fontWeight = FontWeight.Bold)
                 }
+                TextButton(
+                    onClick = { viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.RECIPES) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("EXPLORE RECIPES  ↗", color = Ink, fontWeight = FontWeight.Bold)
+                }
             }
         }
     }
