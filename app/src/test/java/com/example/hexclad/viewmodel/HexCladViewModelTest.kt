@@ -66,13 +66,17 @@ class HexCladViewModelTest {
     @Test
     fun categoryFilterAndPriceSortAreAppliedTogether() {
         viewModel.selectedCategory = "Cookware"
-        viewModel.sortByPriceAscending = true
+        viewModel.sortMode = SortMode.PRICE_LOW_TO_HIGH
 
         val results = viewModel.visibleProducts()
 
         assertTrue(results.isNotEmpty())
         assertTrue(results.all { it.category == "Cookware" })
         assertEquals(results.sortedBy { it.price }, results)
+
+        viewModel.sortMode = SortMode.PRICE_HIGH_TO_LOW
+        val descending = viewModel.visibleProducts()
+        assertEquals(descending.sortedByDescending { it.price }, descending)
     }
 
     @Test
