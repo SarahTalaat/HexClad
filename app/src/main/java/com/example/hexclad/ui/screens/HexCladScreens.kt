@@ -42,6 +42,7 @@ import java.util.Locale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.LocalContext
 import android.widget.Toast
+import android.util.Patterns
 
 private val Ink = Color(0xFF171717)
 private val WarmWhite = Color(0xFFF7F6F2)
@@ -521,7 +522,7 @@ fun CheckoutScreen(viewModel: HexCladViewModel) {
                 }
                 Button(
                     onClick = {
-                        val valid = fullName.isNotBlank() && email.contains("@") && address.isNotBlank() && city.isNotBlank() && postalCode.isNotBlank()
+                        val valid = fullName.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches() && address.isNotBlank() && city.isNotBlank() && postalCode.isNotBlank()
                         if (valid) {
                             showValidation = false
                             showConfirmation = true
