@@ -217,8 +217,8 @@ private fun ProductCard(p: Product, saved: Boolean, onSave: (String) -> Unit, on
         Spacer(Modifier.height(9.dp))
         Text(p.name, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.heightIn(min = 36.dp).clickable { onOpen() })
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-            Text("$${p.price}", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-            if (p.oldPrice != null) Text("$${p.oldPrice}", fontSize = 11.sp, color = Gray, textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough)
+            Text("\$${p.price}", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+            if (p.oldPrice != null) Text("\$${p.oldPrice}", fontSize = 11.sp, color = Gray, textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough)
         }
         OutlinedButton(onClick = onAdd, modifier = Modifier.fillMaxWidth().padding(top = 7.dp).height(37.dp), shape = RoundedCornerShape(2.dp), contentPadding = PaddingValues(3.dp)) {
             Icon(Icons.Default.Add, null, modifier = Modifier.size(13.dp)); Spacer(Modifier.width(4.dp)); Text("ADD TO CART", fontSize = 9.sp, fontWeight = FontWeight.Bold, letterSpacing = .6.sp)
@@ -266,7 +266,7 @@ private fun ProductDetail(p: Product, quantity: Int, saved: Boolean, onBack: () 
                 Text(p.category.uppercase(), color = Gray, fontSize = 10.sp, letterSpacing = 1.5.sp, fontWeight = FontWeight.Bold)
                 Text(p.name, fontSize = 27.sp, lineHeight = 31.sp, fontWeight = FontWeight.Black)
                 Text("★★★★★  Customer favorite", color = Gold, fontSize = 13.sp)
-                Row(verticalAlignment = Alignment.CenterVertically) { Text("$${p.price}", fontSize = 23.sp, fontWeight = FontWeight.Bold); if (p.oldPrice != null) Text("  $${p.oldPrice}", color = Gray, textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough) }
+                Row(verticalAlignment = Alignment.CenterVertically) { Text("\$${p.price}", fontSize = 23.sp, fontWeight = FontWeight.Bold); if (p.oldPrice != null) Text("  \$${p.oldPrice}", color = Gray, textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough) }
                 Text("Hybrid performance. Exceptional durability. Effortless everyday cooking. Designed to deliver the sear of stainless steel with the convenience of nonstick.", fontSize = 14.sp, lineHeight = 22.sp)
                 Text("✓  Metal-utensil safe     ✓  Easy cleanup     ✓  Lifetime warranty", fontSize = 12.sp, color = Gray)
                 Button(onClick = onAdd, modifier = Modifier.fillMaxWidth().height(52.dp), shape = RoundedCornerShape(2.dp), colors = ButtonDefaults.buttonColors(containerColor = Black)) { Text(if (quantity > 0) "ADD ANOTHER  •  IN CART: ${quantity}" else "ADD TO CART", fontWeight = FontWeight.Bold, letterSpacing = .7.sp) }
@@ -297,7 +297,7 @@ private fun CartPage(cart: Map<String, Int>, onShop: () -> Unit, onQuantity: (St
                     AsyncImage(p.image, p.name, Modifier.size(96.dp).clip(RoundedCornerShape(3.dp)).clickable { onDetail(p) }, contentScale = ContentScale.Crop)
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(p.name, fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
-                        Text("$${p.price}", fontWeight = FontWeight.Bold)
+                        Text("\$${p.price}", fontWeight = FontWeight.Bold)
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             IconButton(onClick = { onQuantity(p.name, (cart[p.name] ?: 1) - 1) }, modifier = Modifier.size(30.dp)) { Icon(Icons.Default.Remove, "Decrease", modifier = Modifier.size(15.dp)) }
                             Text("${cart[p.name] ?: 0}", modifier = Modifier.padding(horizontal = 8.dp))
@@ -311,7 +311,7 @@ private fun CartPage(cart: Map<String, Int>, onShop: () -> Unit, onQuantity: (St
             }
             item {
                 Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { Text("Subtotal"); Text("$${subtotal}", fontWeight = FontWeight.Bold) }
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { Text("Subtotal"); Text("\$${subtotal}", fontWeight = FontWeight.Bold) }
                     Text("Shipping and taxes calculated at checkout.", color = Gray, fontSize = 12.sp)
                     Button(onClick = {}, modifier = Modifier.fillMaxWidth().height(50.dp), colors = ButtonDefaults.buttonColors(containerColor = Black), shape = RoundedCornerShape(2.dp)) { Text("CHECKOUT") }
                     Text("Demo checkout — no payment will be collected.", fontSize = 10.sp, color = Gray)
@@ -361,8 +361,8 @@ private fun AccountPage(savedCount: Int, cartCount: Int) {
                 Button(onClick = {}, modifier = Modifier.fillMaxWidth().height(50.dp), colors = ButtonDefaults.buttonColors(containerColor = Black), shape = RoundedCornerShape(2.dp)) { Text("SIGN IN / CREATE ACCOUNT") }
             }
         }
-        item { AccountRow(Icons.Default.FavoriteBorder, "Wishlist", "$${savedCount} saved items") }
-        item { AccountRow(Icons.Default.ShoppingBag, "Shopping bag", "$${cartCount} items") }
+        item { AccountRow(Icons.Default.FavoriteBorder, "Wishlist", "\$${savedCount} saved items") }
+        item { AccountRow(Icons.Default.ShoppingBag, "Shopping bag", "\$${cartCount} items") }
         item { AccountRow(Icons.Default.LocalShipping, "Orders & tracking", "View your order history") }
         item { AccountRow(Icons.Default.VerifiedUser, "Warranty", "Learn about lifetime coverage") }
         item { AccountRow(Icons.Default.HelpOutline, "Help & support", "Get help with your order") }
