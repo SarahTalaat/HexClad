@@ -19,7 +19,7 @@ Native Android shopping-app prototype built with Kotlin, Jetpack Compose, Materi
 - Checkout form with delivery fields, order summary, demo confirmation, and locally saved demo order history
 - Recipe inspiration and profile/help links
 - Empty states with recovery actions, image placeholders, cart-count badge, quantity-limit-aware add-to-cart feedback, and system-back handling
-- Fixed brand palette with light/dark appearance following Android system preference
+- Consistent HexClad cream, black, and lime brand palette
 
 ## Important prototype limitations
 
