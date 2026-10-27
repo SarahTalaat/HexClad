@@ -30,6 +30,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Pin Gradle to JDK 17
+        run: |
+          echo "Using JAVA_HOME=$JAVA_HOME_17_X64"
+          echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
+          echo "$JAVA_HOME_17_X64/bin" >> "$GITHUB_PATH"
+          "$JAVA_HOME_17_X64/bin/java" -version
+
       - name: Install Android SDK packages
         run: |
           SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)"
@@ -41,7 +48,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run unit tests and assemble debug APK
-        run: set -o pipefail; ./gradlew --no-daemon --stacktrace --info testDebugUnitTest assembleDebug 2>&1 | tee gradle-build.log
+        run: set -o pipefail; export JAVA_HOME="$JAVA_HOME_17_X64"; export PATH="$JAVA_HOME/bin:$PATH"; java -version; ./gradlew --no-daemon -Dorg.gradle.java.home="$JAVA_HOME" --stacktrace --info testDebugUnitTest assembleDebug 2>&1 | tee gradle-build.log
 
       - name: Upload Gradle diagnostic log
         if: always()
