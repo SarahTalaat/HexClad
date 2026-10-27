@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
-enum class NavTab { HOME, SHOP, RECIPES, WISHLIST, CART, PROFILE }
+enum class NavTab { HOME, SHOP, RECIPES, WISHLIST, CART, PROFILE, CHECKOUT }
 enum class SortMode { RECOMMENDED, PRICE_LOW_TO_HIGH, PRICE_HIGH_TO_LOW }
 
 data class HexCladProduct(
@@ -104,6 +104,10 @@ class HexCladViewModel : ViewModel() {
 
     fun removeFromCart(productId: String) {
         cart.removeAll { it.product.id == productId }
+    }
+
+    fun clearCart() {
+        cart.clear()
     }
 
     fun toggleFavorite(product: HexCladProduct) {
