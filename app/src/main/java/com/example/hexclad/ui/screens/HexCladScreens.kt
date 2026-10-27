@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -251,6 +252,7 @@ fun WishlistScreen(viewModel: HexCladViewModel) {
 
 @Composable
 fun CartScreen(viewModel: HexCladViewModel) {
+    var showCheckoutPreview by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxSize().background(WarmWhite).padding(horizontal = 20.dp)) {
         Text("YOUR CART", Modifier.padding(top = 24.dp, bottom = 18.dp), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Black, color = Ink)
         if (viewModel.cartLines.isEmpty()) {
@@ -275,7 +277,12 @@ fun CartScreen(viewModel: HexCladViewModel) {
                                 IconButton(onClick = { viewModel.changeQuantity(line.product.id, 1) }) { Icon(Icons.Default.Add, contentDescription = "Increase") }
                             }
                         }
-                        Text(money(line.product.price * line.quantity), color = Ink, fontWeight = FontWeight.Bold)
+                        Column(horizontalAlignment = Alignment.End) {
+                            Text(money(line.product.price * line.quantity), color = Ink, fontWeight = FontWeight.Bold)
+                            IconButton(onClick = { viewModel.removeFromCart(line.product.id) }) {
+                                Icon(Icons.Default.DeleteOutline, contentDescription = "Remove ${line.product.name} from cart", tint = Muted)
+                            }
+                        }
                     }
                 }
             }
@@ -284,11 +291,26 @@ fun CartScreen(viewModel: HexCladViewModel) {
                 Text("Subtotal", color = Ink, style = MaterialTheme.typography.titleMedium)
                 Text(money(viewModel.cartSubtotal), color = Ink, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             }
-            Button(onClick = { }, modifier = Modifier.fillMaxWidth().height(52.dp), colors = ButtonDefaults.buttonColors(containerColor = Ink), shape = RoundedCornerShape(2.dp)) {
+            Button(onClick = { showCheckoutPreview = true }, modifier = Modifier.fillMaxWidth().height(52.dp), colors = ButtonDefaults.buttonColors(containerColor = Ink), shape = RoundedCornerShape(2.dp)) {
                 Text("CONTINUE TO CHECKOUT", color = Color.White, fontWeight = FontWeight.Bold)
             }
             Text("Checkout integration requires the store's approved commerce service.", Modifier.padding(top = 10.dp, bottom = 20.dp), color = Muted, style = MaterialTheme.typography.bodySmall)
         }
+    }
+    if (showCheckoutPreview) {
+        AlertDialog(
+            onDismissRequest = { showCheckoutPreview = false },
+            title = { Text("Checkout preview") },
+            text = {
+                Text("This prototype is not connected to HexClad's live commerce or payment service. No order or payment has been placed.")
+            },
+            confirmButton = {
+                TextButton(onClick = { showCheckoutPreview = false }) { Text("Continue shopping") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showCheckoutPreview = false }) { Text("Close") }
+            }
+        )
     }
 }
 
