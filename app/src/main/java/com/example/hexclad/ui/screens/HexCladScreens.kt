@@ -447,7 +447,12 @@ fun CartScreen(viewModel: HexCladViewModel) {
 fun RecipeScreen(viewModel: HexCladViewModel) {
     LazyColumn(Modifier.fillMaxSize().background(WarmWhite), contentPadding = PaddingValues(20.dp)) {
         item {
-            Text("THE COOKING CLUB", style = MaterialTheme.typography.labelLarge, color = Muted, fontWeight = FontWeight.Bold)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = { viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.HOME) }) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = "Back to home")
+                }
+                Text("THE COOKING CLUB", style = MaterialTheme.typography.labelLarge, color = Muted, fontWeight = FontWeight.Bold)
+            }
             Spacer(Modifier.height(8.dp))
             Text("Find your next favorite.", style = MaterialTheme.typography.headlineMedium, color = Ink, fontWeight = FontWeight.Black)
             Spacer(Modifier.height(8.dp))
