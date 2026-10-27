@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.RestaurantMenu
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
@@ -178,6 +179,12 @@ private fun ProductCard(product: HexCladProduct, viewModel: HexCladViewModel) {
         Box(Modifier.fillMaxWidth().height(170.dp).background(Color(0xFFF0F0EC))) {
             if (product.imageUrl.isNotBlank()) {
                 AsyncImage(model = product.imageUrl, contentDescription = product.name, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+            } else {
+                Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(Icons.Default.RestaurantMenu, contentDescription = null, tint = Color(0xFF9B9B91), modifier = Modifier.size(42.dp))
+                    Spacer(Modifier.height(6.dp))
+                    Text("HEXCLAD", color = Color(0xFF9B9B91), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Black)
+                }
             }
             IconButton(onClick = { viewModel.toggleFavorite(product) }, modifier = Modifier.align(Alignment.TopEnd)) {
                 Icon(if (viewModel.isFavorite(product)) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "Toggle favorite", tint = if (viewModel.isFavorite(product)) Color.Red else Ink)
@@ -209,7 +216,15 @@ fun ProductDetailScreen(product: HexCladProduct, viewModel: HexCladViewModel) {
                 Text("PRODUCT DETAILS", fontWeight = FontWeight.Bold, color = Ink, style = MaterialTheme.typography.labelLarge)
             }
             Box(Modifier.fillMaxWidth().height(330.dp).background(Color(0xFFF0F0EC))) {
-                AsyncImage(model = product.imageUrl, contentDescription = product.name, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
+                if (product.imageUrl.isNotBlank()) {
+                    AsyncImage(model = product.imageUrl, contentDescription = product.name, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
+                } else {
+                    Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.RestaurantMenu, contentDescription = null, tint = Color(0xFF9B9B91), modifier = Modifier.size(64.dp))
+                        Spacer(Modifier.height(8.dp))
+                        Text("HEXCLAD", color = Color(0xFF9B9B91), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Black)
+                    }
+                }
             }
             Column(Modifier.padding(20.dp)) {
                 Text(product.category.uppercase(Locale.US), color = Muted, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
