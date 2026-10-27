@@ -512,12 +512,12 @@ fun CheckoutScreen(viewModel: HexCladViewModel) {
             }
             Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp)) {
                 if (showValidation) {
-                    Text("Please enter your name, a valid email, and delivery address.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    Text("Please enter your name, a valid email, street address, city, and postal code.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                     Spacer(Modifier.height(6.dp))
                 }
                 Button(
                     onClick = {
-                        val valid = fullName.isNotBlank() && email.contains("@") && address.isNotBlank() && city.isNotBlank()
+                        val valid = fullName.isNotBlank() && email.contains("@") && address.isNotBlank() && city.isNotBlank() && postalCode.isNotBlank()
                         if (valid) {
                             showValidation = false
                             showConfirmation = true
