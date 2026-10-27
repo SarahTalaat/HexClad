@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.RestaurantMenu
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
@@ -50,7 +49,7 @@ class MainActivity : ComponentActivity() {
                                 tonalElevation = 8.dp
                             ) {
                                 NavigationBarItem(
-                                    selected = viewModel.currentTab == NavTab.HOME,
+                                    selected = viewModel.currentTab == NavTab.HOME || viewModel.currentTab == NavTab.RECIPES,
                                     onClick = { viewModel.switchTab(NavTab.HOME) },
                                     icon = { Icon(imageVector = Icons.Default.Home, contentDescription = "Home") },
                                     label = { Text("Home") },
@@ -67,19 +66,6 @@ class MainActivity : ComponentActivity() {
                                     onClick = { viewModel.switchTab(NavTab.SHOP) },
                                     icon = { Icon(imageVector = Icons.Default.ShoppingBag, contentDescription = "Shop") },
                                     label = { Text("Shop") },
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = Color.Black,
-                                        selectedTextColor = MaterialTheme.colorScheme.primary,
-                                        indicatorColor = MaterialTheme.colorScheme.primary,
-                                        unselectedIconColor = Color.Gray,
-                                        unselectedTextColor = Color.Gray
-                                    )
-                                )
-                                NavigationBarItem(
-                                    selected = viewModel.currentTab == NavTab.RECIPES,
-                                    onClick = { viewModel.switchTab(NavTab.RECIPES) },
-                                    icon = { Icon(imageVector = Icons.Default.RestaurantMenu, contentDescription = "Recipes") },
-                                    label = { Text("Recipes") },
                                     colors = NavigationBarItemDefaults.colors(
                                         selectedIconColor = Color.Black,
                                         selectedTextColor = MaterialTheme.colorScheme.primary,
