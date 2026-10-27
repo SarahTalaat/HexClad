@@ -41,19 +41,26 @@ class HexCladViewModel : ViewModel() {
     val cartItemCount: Int get() = cart.sumOf { it.quantity }
     val cartSubtotal: Double get() = cart.sumOf { it.product.price * it.quantity }
 
+    // Demonstration catalog aligned to products currently listed on HexClad's public store.
+    // Prices are snapshots for UI demonstration; connect the official commerce API before production.
     val products = listOf(
-        HexCladProduct("hybrid-pan", "Hybrid Frying Pan", "The original hybrid technology", 99.00, "Cookware",
-            "https://hexclad.com/cdn/shop/files/Hybrid_Frying_Pan_10_inch_1.jpg", "A versatile hybrid pan designed for everyday cooking, with HexClad's distinctive hybrid cooking surface."),
-        HexCladProduct("hybrid-wok", "Hybrid Wok", "High heat. Big flavor.", 149.00, "Cookware",
-            "https://hexclad.com/cdn/shop/files/Hybrid_Wok_12_inch_1.jpg", "A roomy wok for stir-fries, searing, and weeknight meals."),
-        HexCladProduct("hybrid-saucepan", "Hybrid Saucepan", "Everyday cooking, elevated", 129.00, "Cookware",
-            "https://hexclad.com/cdn/shop/files/Hybrid_Saucepan_2_Quart_1.jpg", "A versatile saucepan for sauces, grains, soups, and sides."),
-        HexCladProduct("knife-set", "Japanese Damascus Knife Set", "Precision in every cut", 399.00, "Knives",
-            "https://hexclad.com/cdn/shop/files/Knife_Set_1.jpg", "A precision knife set designed for confident prep."),
-        HexCladProduct("cutting-board", "Cutting Board", "A dependable prep essential", 49.00, "Accessories",
-            "https://hexclad.com/cdn/shop/files/Cutting_Board_1.jpg", "A durable prep surface for daily kitchen tasks."),
-        HexCladProduct("hybrid-pot", "Hybrid Stock Pot", "Room for your best recipes", 199.00, "Cookware",
-            "https://hexclad.com/cdn/shop/files/Hybrid_Stock_Pot_1.jpg", "A generous stock pot for family meals and batch cooking.")
+        HexCladProduct("cookware-set-12", "Hybrid Pots & Pans Set, 12-pc", "A complete kitchen foundation", 699.00, "Sets", "", "A multi-piece hybrid cookware set for everyday meals and entertaining."),
+        HexCladProduct("fry-pan-set-6", "Hybrid Fry Pan Set with Lids, 6pc", "Everyday essentials, together", 399.00, "Sets", "", "A set of hybrid fry pans with lids for versatile daily cooking."),
+        HexCladProduct("pot-set-6", "Hybrid Pot Set with Lids, 6-pc", "Versatile pots for every day", 379.00, "Sets", "", "A collection of hybrid pots with lids for soups, grains, sauces, and more."),
+        HexCladProduct("hybrid-pan-12", "Hybrid Fry Pan, 12\u0022", "The everyday workhorse", 179.00, "Cookware", "https://hexclad.com/cdn/shop/files/Hybrid_Frying_Pan_10_inch_1.jpg", "A versatile hybrid fry pan designed for searing, sautéing, and everyday cooking."),
+        HexCladProduct("hybrid-pan-10", "Hybrid Fry Pan, 10\u0022", "Perfect for daily cooking", 149.00, "Cookware", "https://hexclad.com/cdn/shop/files/Hybrid_Frying_Pan_10_inch_1.jpg", "A versatile pan for eggs, vegetables, and quick weeknight meals."),
+        HexCladProduct("hybrid-pan-8", "Hybrid Fry Pan, 8\u0022", "Small pan, big utility", 129.00, "Cookware", "", "A compact hybrid fry pan for smaller portions and quick tasks."),
+        HexCladProduct("hybrid-wok-14", "Hybrid Wok with Lid, 14\u0022", "High heat. Big flavor.", 219.00, "Cookware", "https://hexclad.com/cdn/shop/files/Hybrid_Wok_12_inch_1.jpg", "A roomy wok for stir-fries, searing, and family-sized meals."),
+        HexCladProduct("hybrid-saucepan-1", "Hybrid Saucepan with Lid, 1-Qt", "Small-batch precision", 119.00, "Cookware", "", "A compact saucepan for sauces, reheating, and side dishes."),
+        HexCladProduct("hybrid-saute-7", "Hybrid Deep Sauté Pan/Chicken Fryer with Lid, 7-Qt", "Room for one-pan meals", 229.00, "Cookware", "", "A deep, versatile pan for braising, frying, and one-pan dinners."),
+        HexCladProduct("hybrid-griddle-12", "Hybrid Griddle Pan, 12\u0022", "Make more of breakfast", 139.00, "Cookware", "", "A flat hybrid cooking surface for pancakes, sandwiches, and seared favorites."),
+        HexCladProduct("hybrid-stockpot-12", "Hybrid Stock Pot with Lid, 12-Qt", "Big batches made easy", 219.00, "Cookware", "", "A generous stock pot for soups, stocks, pasta, and batch cooking."),
+        HexCladProduct("knife-set-green", "Damascus Steel Knife Set, 7-pc (Green)", "Precision in every cut", 499.00, "Knives", "https://hexclad.com/cdn/shop/files/Knife_Set_1.jpg", "A multi-piece Damascus steel knife set for everyday food preparation."),
+        HexCladProduct("knife-set-studio", "Damascus Steel Studio Knife Set, 5-pc", "A refined prep collection", 399.00, "Knives", "", "A five-piece knife collection designed for confident kitchen prep."),
+        HexCladProduct("cutting-board", "Hybrid Carving & Cutting Board", "A dependable prep essential", 99.00, "Accessories", "", "A practical prep surface for daily kitchen tasks."),
+        HexCladProduct("utensil-set", "Kitchen Utensil Set, 9-pc", "Tools for the whole cook", 249.00, "Accessories", "", "A coordinated utensil collection for everyday cooking."),
+        HexCladProduct("steamer-basket", "Steamer Basket Set, 2-pc", "More ways to cook", 69.00, "Accessories", "", "A two-piece steamer basket set for vegetables, dumplings, and more."),
+        HexCladProduct("salt-pepper", "HexMill Salt & Pepper Grinder Set", "Finish every dish", 249.00, "Accessories", "", "A matching grinder set for seasoning at the table and while cooking.")
     )
 
     fun visibleProducts(): List<HexCladProduct> {
