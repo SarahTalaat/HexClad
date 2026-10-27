@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
-enum class NavTab { HOME, SHOP, RECIPES, CART, PROFILE }
+enum class NavTab { HOME, SHOP, RECIPES, WISHLIST, CART, PROFILE }
 
 data class HexCladProduct(
     val id: String,
@@ -36,6 +36,7 @@ class HexCladViewModel : ViewModel() {
 
     val cartLines: List<CartLine> get() = cart.toList()
     val favoriteIds: List<String> get() = favorites.toList()
+    val favoriteProducts: List<HexCladProduct> get() = products.filter { it.id in favorites }
     val cartItemCount: Int get() = cart.sumOf { it.quantity }
     val cartSubtotal: Double get() = cart.sumOf { it.product.price * it.quantity }
 
