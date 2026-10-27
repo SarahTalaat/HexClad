@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.DeleteOutline
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +32,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.hexclad.viewmodel.HexCladProduct
 import com.example.hexclad.viewmodel.HexCladViewModel
+import com.example.hexclad.viewmodel.SortMode
 import java.util.Locale
+import androidx.compose.ui.platform.LocalUriHandler
 
 private val Ink = Color(0xFF171717)
 private val WarmWhite = Color(0xFFF7F6F2)
@@ -102,7 +105,8 @@ Your rules.", color = Color.White, style = MaterialTheme.typography.displaySmall
 fun ShopScreen(viewModel: HexCladViewModel) {
     val products = viewModel.visibleProducts()
     Column(Modifier.fillMaxSize().background(WarmWhite)) {
-        Text("SHOP HEXCLAD", Modifier.padding(start = 20.dp, top = 22.dp, bottom = 14.dp), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Black, color = Ink)
+        Text("SHOP HEXCLAD", Modifier.padding(start = 20.dp, top = 22.dp, bottom = 6.dp), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Black, color = Ink)
+        Text("Prototype catalog · prices and availability are illustrative, not live store data.", Modifier.padding(horizontal = 20.dp, vertical = 4.dp), color = Muted, style = MaterialTheme.typography.bodySmall)
         OutlinedTextField(
             value = viewModel.searchQuery,
             onValueChange = { viewModel.searchQuery = it },
@@ -123,8 +127,27 @@ fun ShopScreen(viewModel: HexCladViewModel) {
         }
         Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Text("${products.size} products", color = Muted, style = MaterialTheme.typography.bodySmall)
-            TextButton(onClick = { viewModel.sortByPriceAscending = !viewModel.sortByPriceAscending }) {
-                Text(if (viewModel.sortByPriceAscending) "Price: low to high" else "Sort by price", color = Ink)
+            var sortMenuExpanded by remember { mutableStateOf(false) }
+            Box {
+                TextButton(onClick = { sortMenuExpanded = true }) {
+                    Text(when (viewModel.sortMode) {
+                        SortMode.RECOMMENDED -> "Recommended"
+                        SortMode.PRICE_LOW_TO_HIGH -> "Price: low to high"
+                        SortMode.PRICE_HIGH_TO_LOW -> "Price: high to low"
+                    }, color = Ink)
+                }
+                DropdownMenu(expanded = sortMenuExpanded, onDismissRequest = { sortMenuExpanded = false }) {
+                    listOf(
+                        SortMode.RECOMMENDED to "Recommended",
+                        SortMode.PRICE_LOW_TO_HIGH to "Price: low to high",
+                        SortMode.PRICE_HIGH_TO_LOW to "Price: high to low"
+                    ).forEach { (mode, label) ->
+                        DropdownMenuItem(text = { Text(label) }, onClick = {
+                            viewModel.sortMode = mode
+                            sortMenuExpanded = false
+                        })
+                    }
+                }
             }
         }
         if (products.isEmpty()) {
@@ -338,20 +361,53 @@ fun RecipeScreen(viewModel: HexCladViewModel) {
 
 @Composable
 fun ProfileScreen(viewModel: HexCladViewModel) {
+    var selectedHelpItem by remember { mutableStateOf<String?>(null) }
+    val uriHandler = LocalUriHandler.current
     Column(Modifier.fillMaxSize().background(WarmWhite).padding(22.dp)) {
         Text("MY HEXCLAD", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Black, color = Ink)
         Spacer(Modifier.height(8.dp))
         Text("Your kitchen, all in one place.", color = Muted)
         Spacer(Modifier.height(24.dp))
         listOf("Sign in or create an account", "Order history", "Shipping & returns", "Warranty information", "Contact support").forEach { label ->
-            Row(Modifier.fillMaxWidth().clickable { }.padding(vertical = 18.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.fillMaxWidth().clickable { selectedHelpItem = label }.padding(vertical = 18.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(label, color = Ink, style = MaterialTheme.typography.bodyLarge)
                 Text("›", color = Ink, style = MaterialTheme.typography.titleLarge)
             }
             HorizontalDivider(color = Color(0xFFE3E2DC))
         }
         Spacer(Modifier.height(20.dp))
-        Text("Guest mode · Account services require official store integration.", color = Muted, style = MaterialTheme.typography.bodySmall)
+        Text("Guest mode · Account and order services are not connected in this prototype.", color = Muted, style = MaterialTheme.typography.bodySmall)
+    }
+    val selected = selectedHelpItem
+    if (selected != null) {
+        val externalUrl = when (selected) {
+            "Shipping & returns" -> "https://hexclad.com/pages/refund-policy"
+            "Warranty information" -> "https://hexclad.com/pages/warranty"
+            "Contact support" -> "https://hexclad.com/pages/contact"
+            else -> null
+        }
+        AlertDialog(
+            onDismissRequest = { selectedHelpItem = null },
+            title = { Text(selected) },
+            text = {
+                Text(when (selected) {
+                    "Sign in or create an account" -> "Live account creation and sign-in require HexClad's approved authentication integration. No account has been created or authenticated."
+                    "Order history" -> "Order history is unavailable in guest prototype mode because no customer account or commerce API is connected."
+                    "Shipping & returns" -> "Open HexClad's official policy page in your browser to review current shipping and return terms."
+                    "Warranty information" -> "Open HexClad's official warranty page in your browser to review current coverage."
+                    else -> "Open HexClad's official support page in your browser."
+                })
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    if (externalUrl != null) uriHandler.openUri(externalUrl)
+                    selectedHelpItem = null
+                }) { Text(if (externalUrl != null) "Open official page" else "OK") }
+            },
+            dismissButton = {
+                if (externalUrl != null) TextButton(onClick = { selectedHelpItem = null }) { Text("Cancel") }
+            }
+        )
     }
 }
 
