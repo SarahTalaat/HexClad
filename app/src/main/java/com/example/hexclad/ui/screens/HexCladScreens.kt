@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -171,11 +172,11 @@ fun ShopScreen(viewModel: HexCladViewModel) {
             }
         }
         if (products.isEmpty()) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("No products found. Try another search.", color = Muted) }
+            Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) { Text("No products found. Try another search.", color = Muted) }
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.weight(1f).fillMaxWidth(),
                 contentPadding = PaddingValues(start = 12.dp, end = 12.dp, bottom = 24.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -449,7 +450,7 @@ fun RecipeScreen(viewModel: HexCladViewModel) {
 fun ProfileScreen(viewModel: HexCladViewModel) {
     var selectedHelpItem by remember { mutableStateOf<String?>(null) }
     val uriHandler = LocalUriHandler.current
-    Column(Modifier.fillMaxSize().background(WarmWhite).padding(22.dp)) {
+    Column(Modifier.fillMaxSize().background(WarmWhite).verticalScroll(rememberScrollState()).padding(22.dp)) {
         Text("MY HEXCLAD", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Black, color = Ink)
         Spacer(Modifier.height(8.dp))
         Text("Your kitchen, all in one place.", color = Muted)
