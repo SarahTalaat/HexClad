@@ -44,6 +44,7 @@ class HexCladViewModel(application: Application) : AndroidViewModel(application)
     var searchQuery by mutableStateOf("")
     var selectedCategory by mutableStateOf("All")
     var sortMode by mutableStateOf(SortMode.RECOMMENDED)
+    var saleOnly by mutableStateOf(false)
 
     private val cart = mutableStateListOf<CartLine>()
     private val favorites = mutableStateListOf<String>()
@@ -162,6 +163,7 @@ class HexCladViewModel(application: Application) : AndroidViewModel(application)
     fun visibleProducts(): List<HexCladProduct> {
         val filtered = products.filter {
             (selectedCategory == "All" || it.category == selectedCategory) &&
+                (!saleOnly || (it.compareAtPrice != null && it.compareAtPrice > it.price)) &&
                 (searchQuery.isBlank() || it.name.contains(searchQuery, ignoreCase = true) ||
                     it.subtitle.contains(searchQuery, ignoreCase = true) ||
                     it.description.contains(searchQuery, ignoreCase = true) ||
