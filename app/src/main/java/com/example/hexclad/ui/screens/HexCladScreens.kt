@@ -31,6 +31,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -533,15 +535,15 @@ fun CheckoutScreen(viewModel: HexCladViewModel) {
                 item {
                     Text("DELIVERY DETAILS", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black, color = Ink)
                     Spacer(Modifier.height(12.dp))
-                    OutlinedTextField(value = fullName, onValueChange = { fullName = it }, label = { Text("Full name") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                    OutlinedTextField(value = fullName, onValueChange = { fullName = it }, label = { Text("Full name") }, modifier = Modifier.fillMaxWidth(), singleLine = true, isError = showValidation && fullName.isBlank())
                     Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email address") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                    OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email address") }, modifier = Modifier.fillMaxWidth(), singleLine = true, isError = showValidation && !Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                     Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(value = address, onValueChange = { address = it }, label = { Text("Street address") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                    OutlinedTextField(value = address, onValueChange = { address = it }, label = { Text("Street address") }, modifier = Modifier.fillMaxWidth(), singleLine = true, isError = showValidation && address.isBlank())
                     Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(value = city, onValueChange = { city = it }, label = { Text("City / region") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                    OutlinedTextField(value = city, onValueChange = { city = it }, label = { Text("City / region") }, modifier = Modifier.fillMaxWidth(), singleLine = true, isError = showValidation && city.isBlank())
                     Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(value = postalCode, onValueChange = { postalCode = it }, label = { Text("Postal code") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                    OutlinedTextField(value = postalCode, onValueChange = { postalCode = it }, label = { Text("Postal code") }, modifier = Modifier.fillMaxWidth(), singleLine = true, isError = showValidation && postalCode.isBlank())
                     Spacer(Modifier.height(24.dp))
                     Text("PAYMENT METHOD", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black, color = Ink)
                     Spacer(Modifier.height(8.dp))
