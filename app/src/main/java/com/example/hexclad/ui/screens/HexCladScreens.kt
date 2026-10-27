@@ -172,6 +172,7 @@ fun ShopScreen(viewModel: HexCladViewModel) {
 
 @Composable
 private fun ProductCard(product: HexCladProduct, viewModel: HexCladViewModel) {
+    val context = LocalContext.current
     Column(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(4.dp)).background(Color.White)
             .clickable { viewModel.openProduct(product) }
@@ -211,6 +212,7 @@ private fun ProductCard(product: HexCladProduct, viewModel: HexCladViewModel) {
 
 @Composable
 fun ProductDetailScreen(product: HexCladProduct, viewModel: HexCladViewModel) {
+    val context = LocalContext.current
     var quantity by remember(product.id) { mutableIntStateOf(1) }
     LazyColumn(Modifier.fillMaxSize().background(WarmWhite), contentPadding = PaddingValues(bottom = 24.dp)) {
         item {
