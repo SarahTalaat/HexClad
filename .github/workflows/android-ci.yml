@@ -17,6 +17,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -28,11 +31,9 @@ jobs:
           java-version: '17'
 
       - name: Install Android SDK packages
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
         run: |
           SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)"
-          if [ -z "$SDKMANAGER" ]; then echo "Android sdkmanager not found under $ANDROID_HOME"; exit 1; fi
+          if [ -z "$SDKMANAGER" ]; then echo "Android sdkmanager not found under $ANDROID_HOME"; ls -la "$ANDROID_HOME"; exit 1; fi
           yes | "$SDKMANAGER" --licenses >/dev/null || true
           "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0" "platform-tools"
 
