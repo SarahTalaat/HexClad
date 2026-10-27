@@ -361,8 +361,8 @@ private fun AccountPage(savedCount: Int, cartCount: Int) {
                 Button(onClick = {}, modifier = Modifier.fillMaxWidth().height(50.dp), colors = ButtonDefaults.buttonColors(containerColor = Black), shape = RoundedCornerShape(2.dp)) { Text("SIGN IN / CREATE ACCOUNT") }
             }
         }
-        item { AccountRow(Icons.Default.FavoriteBorder, "Wishlist", "\$${savedCount} saved items") }
-        item { AccountRow(Icons.Default.ShoppingBag, "Shopping bag", "\$${cartCount} items") }
+        item { AccountRow(Icons.Default.FavoriteBorder, "Wishlist", "${savedCount} saved items") }
+        item { AccountRow(Icons.Default.ShoppingBag, "Shopping bag", "${cartCount} items") }
         item { AccountRow(Icons.Default.LocalShipping, "Orders & tracking", "View your order history") }
         item { AccountRow(Icons.Default.VerifiedUser, "Warranty", "Learn about lifetime coverage") }
         item { AccountRow(Icons.Default.HelpOutline, "Help & support", "Get help with your order") }
