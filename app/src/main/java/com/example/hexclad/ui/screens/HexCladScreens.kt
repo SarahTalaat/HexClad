@@ -298,7 +298,6 @@ fun WishlistScreen(viewModel: HexCladViewModel) {
 
 @Composable
 fun CartScreen(viewModel: HexCladViewModel) {
-    var showCheckoutPreview by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxSize().background(WarmWhite).padding(horizontal = 20.dp)) {
         Text("YOUR CART", Modifier.padding(top = 24.dp, bottom = 18.dp), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Black, color = Ink)
         if (viewModel.cartLines.isEmpty()) {
@@ -343,21 +342,7 @@ fun CartScreen(viewModel: HexCladViewModel) {
             Text("Checkout integration requires the store's approved commerce service.", Modifier.padding(top = 10.dp, bottom = 20.dp), color = Muted, style = MaterialTheme.typography.bodySmall)
         }
     }
-    if (showCheckoutPreview) {
-        AlertDialog(
-            onDismissRequest = { showCheckoutPreview = false },
-            title = { Text("Checkout preview") },
-            text = {
-                Text("This prototype is not connected to HexClad's live commerce or payment service. No order or payment has been placed.")
-            },
-            confirmButton = {
-                TextButton(onClick = { showCheckoutPreview = false }) { Text("Continue shopping") }
-            },
-            dismissButton = {
-                TextButton(onClick = { showCheckoutPreview = false }) { Text("Close") }
-            }
-        )
-    }
+
 }
 
 @Composable
