@@ -2,6 +2,7 @@ package com.example.hexclad.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -35,6 +36,8 @@ import com.example.hexclad.viewmodel.HexCladViewModel
 import com.example.hexclad.viewmodel.SortMode
 import java.util.Locale
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
 
 private val Ink = Color(0xFF171717)
 private val WarmWhite = Color(0xFFF7F6F2)
@@ -187,7 +190,7 @@ private fun ProductCard(product: HexCladProduct, viewModel: HexCladViewModel) {
             Spacer(Modifier.height(8.dp))
             Text(money(product.price), color = Ink, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
-            OutlinedButton(onClick = { viewModel.addToCart(product) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(2.dp), contentPadding = PaddingValues(vertical = 8.dp)) {
+            OutlinedButton(onClick = {\n                viewModel.addToCart(product)\n                Toast.makeText(context, "${product.name} added to cart", Toast.LENGTH_SHORT).show()\n            }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(2.dp), contentPadding = PaddingValues(vertical = 8.dp)) {
                 Icon(Icons.Default.ShoppingBag, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(6.dp))
                 Text("ADD TO CART", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
@@ -227,7 +230,7 @@ fun ProductDetailScreen(product: HexCladProduct, viewModel: HexCladViewModel) {
                         Icon(if (viewModel.isFavorite(product)) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "Toggle favorite")
                     }
                 }
-                Button(onClick = { repeat(quantity) { viewModel.addToCart(product) } }, modifier = Modifier.fillMaxWidth().height(52.dp), shape = RoundedCornerShape(2.dp), colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = Color.White)) {
+                Button(onClick = {\n                    repeat(quantity) { viewModel.addToCart(product) }\n                    Toast.makeText(context, "$quantity × ${product.name} added to cart", Toast.LENGTH_SHORT).show()\n                }, modifier = Modifier.fillMaxWidth().height(52.dp), shape = RoundedCornerShape(2.dp), colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = Color.White)) {
                     Text("ADD TO CART · ${money(product.price * quantity)}", fontWeight = FontWeight.Bold)
                 }
             }
