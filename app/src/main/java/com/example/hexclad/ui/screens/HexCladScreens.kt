@@ -332,7 +332,7 @@ fun CartScreen(viewModel: HexCladViewModel) {
                 Text("Subtotal", color = Ink, style = MaterialTheme.typography.titleMedium)
                 Text(money(viewModel.cartSubtotal), color = Ink, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             }
-            Button(onClick = { showCheckoutPreview = true }, modifier = Modifier.fillMaxWidth().height(52.dp), colors = ButtonDefaults.buttonColors(containerColor = Ink), shape = RoundedCornerShape(2.dp)) {
+            Button(onClick = { viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.CHECKOUT) }, modifier = Modifier.fillMaxWidth().height(52.dp), colors = ButtonDefaults.buttonColors(containerColor = Ink), shape = RoundedCornerShape(2.dp)) {
                 Text("CONTINUE TO CHECKOUT", color = Color.White, fontWeight = FontWeight.Bold)
             }
             Text("Checkout integration requires the store's approved commerce service.", Modifier.padding(top = 10.dp, bottom = 20.dp), color = Muted, style = MaterialTheme.typography.bodySmall)
@@ -430,3 +430,123 @@ fun ProfileScreen(viewModel: HexCladViewModel) {
 }
 
 private fun money(amount: Double): String = "$" + String.format(Locale.US, "%.2f", amount)
+
+
+@Composable
+fun CheckoutScreen(viewModel: HexCladViewModel) {
+    var fullName by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var address by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf("") }
+    var postalCode by remember { mutableStateOf("") }
+    var paymentMethod by remember { mutableStateOf("Card (demo)") }
+    var showConfirmation by remember { mutableStateOf(false) }
+    var showValidation by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    Column(Modifier.fillMaxSize().background(WarmWhite)) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = { viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.CART) }) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Back to cart")
+            }
+            Text("CHECKOUT", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black, color = Ink)
+        }
+        if (viewModel.cartLines.isEmpty()) {
+            Column(Modifier.fillMaxWidth().padding(24.dp)) {
+                Text("Your cart is empty", style = MaterialTheme.typography.titleLarge, color = Ink, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.height(12.dp))
+                Button(onClick = { viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.SHOP) }) {
+                    Text("Continue shopping")
+                }
+            }
+        } else {
+            LazyColumn(Modifier.weight(1f).fillMaxWidth(), contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp)) {
+                item {
+                    Text("DELIVERY DETAILS", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black, color = Ink)
+                    Spacer(Modifier.height(12.dp))
+                    OutlinedTextField(value = fullName, onValueChange = { fullName = it }, label = { Text("Full name") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email address") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(value = address, onValueChange = { address = it }, label = { Text("Street address") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(value = city, onValueChange = { city = it }, label = { Text("City / region") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(value = postalCode, onValueChange = { postalCode = it }, label = { Text("Postal code") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                    Spacer(Modifier.height(24.dp))
+                    Text("PAYMENT METHOD", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black, color = Ink)
+                    Spacer(Modifier.height(8.dp))
+                    listOf("Card (demo)", "Pay on delivery (demo)").forEach { method ->
+                        Row(Modifier.fillMaxWidth().clickable { paymentMethod = method }.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                            RadioButton(selected = paymentMethod == method, onClick = { paymentMethod = method })
+                            Spacer(Modifier.width(8.dp))
+                            Text(method, color = Ink)
+                        }
+                    }
+                    Text("Demo only. No card details are collected and no real payment or order will be created.", color = Muted, style = MaterialTheme.typography.bodySmall)
+                    Spacer(Modifier.height(24.dp))
+                    Text("ORDER SUMMARY", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black, color = Ink)
+                    Spacer(Modifier.height(8.dp))
+                }
+                items(viewModel.cartLines, key = { it.product.id }) { line ->
+                    Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f)) {
+                            Text(line.product.name, color = Ink, fontWeight = FontWeight.Medium)
+                            Text("Qty ${line.quantity}", color = Muted, style = MaterialTheme.typography.bodySmall)
+                        }
+                        Text(money(line.product.price * line.quantity), color = Ink, fontWeight = FontWeight.Bold)
+                    }
+                }
+                item {
+                    HorizontalDivider(Modifier.padding(vertical = 10.dp))
+                    Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("Subtotal", color = Ink)
+                        Text(money(viewModel.cartSubtotal), color = Ink, fontWeight = FontWeight.Bold)
+                    }
+                    Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("Shipping", color = Muted)
+                        Text("Calculated by store", color = Muted, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
+            Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp)) {
+                if (showValidation) {
+                    Text("Please enter your name, a valid email, and delivery address.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    Spacer(Modifier.height(6.dp))
+                }
+                Button(
+                    onClick = {
+                        val valid = fullName.isNotBlank() && email.contains("@") && address.isNotBlank() && city.isNotBlank()
+                        if (valid) {
+                            showValidation = false
+                            showConfirmation = true
+                        } else {
+                            showValidation = true
+                            Toast.makeText(context, "Complete the required delivery details", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth().height(52.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = Color.White),
+                    shape = RoundedCornerShape(2.dp)
+                ) {
+                    Text("PLACE DEMO ORDER · ${money(viewModel.cartSubtotal)}", fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+    }
+
+    if (showConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showConfirmation = false },
+            title = { Text("Demo order complete") },
+            text = { Text("Thanks, $fullName. This is a local prototype confirmation only. No order was sent to HexClad and no payment was processed.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.clearCart()
+                    showConfirmation = false
+                    viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.HOME)
+                }) { Text("Back to home") }
+            }
+        )
+    }
+}
