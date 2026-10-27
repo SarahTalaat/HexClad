@@ -31,7 +31,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
+import coil.compose.AsyncImagePainter
 import com.example.hexclad.viewmodel.HexCladProduct
 import com.example.hexclad.viewmodel.HexCladViewModel
 import com.example.hexclad.viewmodel.SortMode
@@ -170,6 +172,31 @@ fun ShopScreen(viewModel: HexCladViewModel) {
     }
 }
 
+
+@Composable
+private fun ProductImage(
+    product: HexCladProduct,
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.Crop
+) {
+    SubcomposeAsyncImage(
+        model = product.imageUrl.takeIf { it.isNotBlank() },
+        contentDescription = product.name,
+        modifier = modifier.background(Color(0xFFF0F0EC)),
+        contentScale = contentScale
+    ) {
+        if (painter.state is AsyncImagePainter.State.Success) {
+            SubcomposeAsyncImageContent()
+        } else {
+            Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Icon(Icons.Default.RestaurantMenu, contentDescription = null, tint = Color(0xFF9B9B91), modifier = Modifier.size(38.dp))
+                Spacer(Modifier.height(6.dp))
+                Text("HEXCLAD", color = Color(0xFF9B9B91), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Black)
+            }
+        }
+    }
+}
+
 @Composable
 private fun ProductCard(product: HexCladProduct, viewModel: HexCladViewModel) {
     val context = LocalContext.current
@@ -178,15 +205,7 @@ private fun ProductCard(product: HexCladProduct, viewModel: HexCladViewModel) {
             .clickable { viewModel.openProduct(product) }
     ) {
         Box(Modifier.fillMaxWidth().height(170.dp).background(Color(0xFFF0F0EC))) {
-            if (product.imageUrl.isNotBlank()) {
-                AsyncImage(model = product.imageUrl, contentDescription = product.name, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
-            } else {
-                Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(Icons.Default.RestaurantMenu, contentDescription = null, tint = Color(0xFF9B9B91), modifier = Modifier.size(42.dp))
-                    Spacer(Modifier.height(6.dp))
-                    Text("HEXCLAD", color = Color(0xFF9B9B91), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Black)
-                }
-            }
+            ProductImage(product = product, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
             IconButton(onClick = { viewModel.toggleFavorite(product) }, modifier = Modifier.align(Alignment.TopEnd)) {
                 Icon(if (viewModel.isFavorite(product)) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "Toggle favorite", tint = if (viewModel.isFavorite(product)) Color.Red else Ink)
             }
@@ -221,15 +240,7 @@ fun ProductDetailScreen(product: HexCladProduct, viewModel: HexCladViewModel) {
                 Text("PRODUCT DETAILS", fontWeight = FontWeight.Bold, color = Ink, style = MaterialTheme.typography.labelLarge)
             }
             Box(Modifier.fillMaxWidth().height(330.dp).background(Color(0xFFF0F0EC))) {
-                if (product.imageUrl.isNotBlank()) {
-                    AsyncImage(model = product.imageUrl, contentDescription = product.name, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
-                } else {
-                    Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(Icons.Default.RestaurantMenu, contentDescription = null, tint = Color(0xFF9B9B91), modifier = Modifier.size(64.dp))
-                        Spacer(Modifier.height(8.dp))
-                        Text("HEXCLAD", color = Color(0xFF9B9B91), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Black)
-                    }
-                }
+                ProductImage(product = product, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
             }
             Column(Modifier.padding(20.dp)) {
                 Text(product.category.uppercase(Locale.US), color = Muted, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
@@ -311,7 +322,7 @@ fun CartScreen(viewModel: HexCladViewModel) {
             LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
                 items(viewModel.cartLines, key = { it.product.id }) { line ->
                     Row(Modifier.fillMaxWidth().background(Color.White).padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                        AsyncImage(model = line.product.imageUrl, contentDescription = line.product.name, modifier = Modifier.size(88.dp).background(Color(0xFFF0F0EC)), contentScale = ContentScale.Crop)
+                        ProductImage(product = line.product, modifier = Modifier.size(88.dp), contentScale = ContentScale.Crop)
                         Spacer(Modifier.width(12.dp))
                         Column(Modifier.weight(1f)) {
                             Text(line.product.name, color = Ink, fontWeight = FontWeight.Bold)
