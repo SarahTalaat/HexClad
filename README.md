@@ -6,8 +6,8 @@ Native Android shopping-app prototype built with Kotlin, Jetpack Compose, Materi
 
 1. Clone this repository and check out `chatgpt/hexclad-native-rebuild`.
 2. Open the repository root in Android Studio.
-3. Allow Gradle sync to finish and install the Android SDK platform/build tools requested by the project.
-4. Select the `app` run configuration and launch it on an emulator or Android device.
+3. Configure Gradle to use JDK 17 and install the Android SDK Platform 36/build tools requested by the project.
+4. Allow Gradle sync to finish, select the `app` run configuration, and launch it on an emulator or Android device.
 
 ## Included prototype flows
 
@@ -31,6 +31,7 @@ Native Android shopping-app prototype built with Kotlin, Jetpack Compose, Materi
 - Checkout is explicitly a local demo. It does not submit an order, collect card details, or process payments.
 - Authentication, customer order history, inventory, shipping calculations, and live checkout require approved HexClad commerce services and credentials.
 - Official support and policy pages open externally; their availability and URLs should be verified before release.
+- The current branch has not been built or run on an emulator in this environment. CI and unit tests were intentionally not run; Android build status is unverified.
 
 ## Production follow-up
 
