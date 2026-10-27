@@ -3,6 +3,7 @@ package com.example.hexclad.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -122,8 +123,8 @@ fun ShopScreen(viewModel: HexCladViewModel) {
             singleLine = true,
             shape = RoundedCornerShape(4.dp)
         )
-        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("All", "Cookware", "Knives", "Accessories").forEach { category ->
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            listOf("All", "Sets", "Cookware", "Knives", "Accessories").forEach { category ->
                 FilterChip(
                     selected = viewModel.selectedCategory == category,
                     onClick = { viewModel.selectedCategory = category },
@@ -255,13 +256,16 @@ fun ProductDetailScreen(product: HexCladProduct, viewModel: HexCladViewModel) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     OutlinedButton(onClick = { if (quantity > 1) quantity-- }, shape = RoundedCornerShape(2.dp), contentPadding = PaddingValues(8.dp)) { Icon(Icons.Default.Remove, contentDescription = "Decrease quantity") }
                     Text("$quantity", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    OutlinedButton(onClick = { quantity++ }, shape = RoundedCornerShape(2.dp), contentPadding = PaddingValues(8.dp)) { Icon(Icons.Default.Add, contentDescription = "Increase quantity") }
+                    OutlinedButton(onClick = { quantity = (quantity + 1).coerceAtMost(99) }, shape = RoundedCornerShape(2.dp), contentPadding = PaddingValues(8.dp)) { Icon(Icons.Default.Add, contentDescription = "Increase quantity") }
                     Spacer(Modifier.weight(1f))
                     IconButton(onClick = { viewModel.toggleFavorite(product) }) {
                         Icon(if (viewModel.isFavorite(product)) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "Toggle favorite")
                     }
                 }
-                Button(onClick = {\n                    repeat(quantity) { viewModel.addToCart(product) }\n                    Toast.makeText(context, "$quantity × ${product.name} added to cart", Toast.LENGTH_SHORT).show()\n                }, modifier = Modifier.fillMaxWidth().height(52.dp), shape = RoundedCornerShape(2.dp), colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = Color.White)) {
+                Button(onClick = {
+                    repeat(quantity) { viewModel.addToCart(product) }
+                    Toast.makeText(context, "$quantity × ${product.name} added to cart", Toast.LENGTH_SHORT).show()
+                }, modifier = Modifier.fillMaxWidth().height(52.dp), shape = RoundedCornerShape(2.dp), colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = Color.White)) {
                     Text("ADD TO CART · ${money(product.price * quantity)}", fontWeight = FontWeight.Bold)
                 }
             }
