@@ -210,7 +210,7 @@ private fun ProductCard(product: HexCladProduct, viewModel: HexCladViewModel) {
         Box(Modifier.fillMaxWidth().height(170.dp).background(Color(0xFFF0F0EC))) {
             ProductImage(product = product, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
             IconButton(onClick = { viewModel.toggleFavorite(product) }, modifier = Modifier.align(Alignment.TopEnd)) {
-                Icon(if (viewModel.isFavorite(product)) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "Toggle favorite", tint = if (viewModel.isFavorite(product)) Color.Red else Ink)
+                Icon(if (viewModel.isFavorite(product)) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = if (viewModel.isFavorite(product)) "Remove ${product.name} from saved items" else "Save ${product.name}", tint = if (viewModel.isFavorite(product)) Color.Red else Ink)
             }
             product.badge?.let { badge ->
                 Surface(
@@ -357,9 +357,9 @@ fun CartScreen(viewModel: HexCladViewModel) {
                             Text(line.product.name, color = Ink, fontWeight = FontWeight.Bold)
                             Text(money(line.product.price), color = Muted)
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                IconButton(onClick = { viewModel.changeQuantity(line.product.id, -1) }) { Icon(Icons.Default.Remove, contentDescription = "Decrease") }
+                                IconButton(onClick = { viewModel.changeQuantity(line.product.id, -1) }) { Icon(Icons.Default.Remove, contentDescription = "Decrease ${line.product.name} quantity") }
                                 Text("${line.quantity}")
-                                IconButton(onClick = { viewModel.changeQuantity(line.product.id, 1) }) { Icon(Icons.Default.Add, contentDescription = "Increase") }
+                                IconButton(onClick = { viewModel.changeQuantity(line.product.id, 1) }) { Icon(Icons.Default.Add, contentDescription = "Increase ${line.product.name} quantity") }
                             }
                         }
                         Column(horizontalAlignment = Alignment.End) {
