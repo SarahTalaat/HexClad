@@ -603,7 +603,7 @@ fun CheckoutScreen(viewModel: HexCladViewModel) {
                     Spacer(Modifier.height(12.dp))
                     OutlinedTextField(value = fullName, onValueChange = { fullName = it }, label = { Text("Full name") }, modifier = Modifier.fillMaxWidth(), singleLine = true, isError = showValidation && fullName.isBlank())
                     Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email address") }, modifier = Modifier.fillMaxWidth(), singleLine = true, isError = showValidation && !Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                    OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email address") }, modifier = Modifier.fillMaxWidth(), singleLine = true, isError = showValidation && !Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email))
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(value = address, onValueChange = { address = it }, label = { Text("Street address") }, modifier = Modifier.fillMaxWidth(), singleLine = true, isError = showValidation && address.isBlank())
                     Spacer(Modifier.height(8.dp))
