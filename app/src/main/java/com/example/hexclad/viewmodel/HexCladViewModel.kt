@@ -4,7 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import org.json.JSONArray
+import org.json.JSONObject
+import androidx.lifecycle.AndroidViewModel
 
 enum class NavTab { HOME, SHOP, RECIPES, WISHLIST, CART, PROFILE, CHECKOUT }
 enum class SortMode { RECOMMENDED, PRICE_LOW_TO_HIGH, PRICE_HIGH_TO_LOW }
@@ -21,7 +24,7 @@ data class HexCladProduct(
 
 data class CartLine(val product: HexCladProduct, val quantity: Int)
 
-class HexCladViewModel : ViewModel() {
+class HexCladViewModel(application: Application) : AndroidViewModel(application) {
     var currentTab by mutableStateOf(NavTab.HOME)
         private set
 
@@ -63,11 +66,48 @@ class HexCladViewModel : ViewModel() {
         HexCladProduct("salt-pepper", "HexMill Salt & Pepper Grinder Set", "Finish every dish", 249.00, "Accessories", "", "A matching grinder set for seasoning at the table and while cooking.")
     )
 
+    private val preferences = application.getSharedPreferences("hexclad_shop_state", Application.MODE_PRIVATE)
+
+    init {
+        restoreShoppingState()
+    }
+
+    private fun restoreShoppingState() {
+        val savedFavorites = preferences.getStringSet("favorites", emptySet()).orEmpty()
+        favorites.addAll(savedFavorites.filter { id -> products.any { it.id == id } })
+
+        val savedCart = preferences.getString("cart", "[]") ?: "[]"
+        runCatching {
+            val array = JSONArray(savedCart)
+            for (index in 0 until array.length()) {
+                val item = array.optJSONObject(index) ?: continue
+                val id = item.optString("id")
+                val quantity = item.optInt("quantity", 0)
+                val product = products.firstOrNull { it.id == id } ?: continue
+                if (quantity > 0) cart.add(CartLine(product, quantity.coerceAtMost(99)))
+            }
+        }
+    }
+
+    private fun persistCart() {
+        val array = JSONArray()
+        cart.forEach { line ->
+            array.put(JSONObject().put("id", line.product.id).put("quantity", line.quantity))
+        }
+        preferences.edit().putString("cart", array.toString()).apply()
+    }
+
+    private fun persistFavorites() {
+        preferences.edit().putStringSet("favorites", favorites.toSet()).apply()
+    }
+
     fun visibleProducts(): List<HexCladProduct> {
         val filtered = products.filter {
             (selectedCategory == "All" || it.category == selectedCategory) &&
                 (searchQuery.isBlank() || it.name.contains(searchQuery, ignoreCase = true) ||
-                    it.subtitle.contains(searchQuery, ignoreCase = true))
+                    it.subtitle.contains(searchQuery, ignoreCase = true) ||
+                    it.description.contains(searchQuery, ignoreCase = true) ||
+                    it.category.contains(searchQuery, ignoreCase = true))
         }
         return when (sortMode) {
             SortMode.RECOMMENDED -> filtered
@@ -91,27 +131,32 @@ class HexCladViewModel : ViewModel() {
 
     fun addToCart(product: HexCladProduct) {
         val index = cart.indexOfFirst { it.product.id == product.id }
-        if (index >= 0) cart[index] = cart[index].copy(quantity = cart[index].quantity + 1)
+        if (index >= 0) cart[index] = cart[index].copy(quantity = (cart[index].quantity + 1).coerceAtMost(99))
         else cart.add(CartLine(product, 1))
+        persistCart()
     }
 
     fun changeQuantity(productId: String, delta: Int) {
         val index = cart.indexOfFirst { it.product.id == productId }
         if (index < 0) return
         val next = cart[index].quantity + delta
-        if (next <= 0) cart.removeAt(index) else cart[index] = cart[index].copy(quantity = next)
+        if (next <= 0) cart.removeAt(index) else cart[index] = cart[index].copy(quantity = next.coerceAtMost(99))
+        persistCart()
     }
 
     fun removeFromCart(productId: String) {
         cart.removeAll { it.product.id == productId }
+        persistCart()
     }
 
     fun clearCart() {
         cart.clear()
+        persistCart()
     }
 
     fun toggleFavorite(product: HexCladProduct) {
         if (product.id in favorites) favorites.remove(product.id) else favorites.add(product.id)
+        persistFavorites()
     }
 
     fun isFavorite(product: HexCladProduct): Boolean = product.id in favorites
