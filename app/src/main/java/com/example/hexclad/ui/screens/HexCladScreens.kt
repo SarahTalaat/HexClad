@@ -212,6 +212,44 @@ fun ProductDetailScreen(product: HexCladProduct, viewModel: HexCladViewModel) {
 }
 
 @Composable
+fun WishlistScreen(viewModel: HexCladViewModel) {
+    val savedProducts = viewModel.favoriteProducts
+    Column(Modifier.fillMaxSize().background(WarmWhite)) {
+        Text(
+            "SAVED ITEMS",
+            Modifier.padding(start = 20.dp, top = 24.dp, bottom = 18.dp),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Black,
+            color = Ink
+        )
+        if (savedProducts.isEmpty()) {
+            Column(Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 48.dp)) {
+                Icon(Icons.Default.FavoriteBorder, contentDescription = null, tint = Muted, modifier = Modifier.size(36.dp))
+                Spacer(Modifier.height(14.dp))
+                Text("Nothing saved yet", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Ink)
+                Spacer(Modifier.height(8.dp))
+                Text("Tap the heart on a product to keep it here.", color = Muted)
+                Spacer(Modifier.height(18.dp))
+                Button(
+                    onClick = { viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.SHOP) },
+                    colors = ButtonDefaults.buttonColors(containerColor = Ink)
+                ) { Text("EXPLORE COOKWARE", color = Color.White) }
+            }
+        } else {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(start = 12.dp, end = 12.dp, bottom = 24.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(savedProducts, key = { it.id }) { ProductCard(it, viewModel) }
+            }
+        }
+    }
+}
+
+@Composable
 fun CartScreen(viewModel: HexCladViewModel) {
     Column(Modifier.fillMaxSize().background(WarmWhite).padding(horizontal = 20.dp)) {
         Text("YOUR CART", Modifier.padding(top = 24.dp, bottom = 18.dp), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Black, color = Ink)
