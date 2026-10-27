@@ -189,11 +189,24 @@ class HexCladViewModel(application: Application) : AndroidViewModel(application)
         selectedProduct = null
     }
 
-    fun addToCart(product: HexCladProduct) {
+    /**
+     * Adds as many of the requested units as fit under the per-product cart limit.
+     * Returns the number actually added so the UI never reports a false quantity.
+     */
+    fun addToCart(product: HexCladProduct, requestedQuantity: Int = 1): Int {
+        if (requestedQuantity <= 0) return 0
         val index = cart.indexOfFirst { it.product.id == product.id }
-        if (index >= 0) cart[index] = cart[index].copy(quantity = (cart[index].quantity + 1).coerceAtMost(99))
-        else cart.add(CartLine(product, 1))
+        val existingQuantity = if (index >= 0) cart[index].quantity else 0
+        val acceptedQuantity = requestedQuantity.coerceAtMost(99 - existingQuantity).coerceAtLeast(0)
+        if (acceptedQuantity == 0) return 0
+
+        if (index >= 0) {
+            cart[index] = cart[index].copy(quantity = existingQuantity + acceptedQuantity)
+        } else {
+            cart.add(CartLine(product, acceptedQuantity))
+        }
         persistCart()
+        return acceptedQuantity
     }
 
     fun changeQuantity(productId: String, delta: Int) {
