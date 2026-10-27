@@ -12,13 +12,14 @@ Native Android shopping-app prototype built with Kotlin, Jetpack Compose, Materi
 ## Included prototype flows
 
 - Home page with promotional hero, highlighted product photography, and featured products
-- Shop catalog with search, horizontally scrollable category filters, and price sorting
+- Shop catalog with search, horizontally scrollable category filters, an on-sale filter, and price sorting
 - Sale labels and crossed-out reference prices for selected products where public HexClad listings expose comparison values
-- Product details, quantity selection, and wishlist toggle with local persistence across app launches
+- Product details with sale pricing for selected items, quantity selection, official shipping/returns and warranty links, and wishlist toggle with local persistence across app launches
 - Cart with quantity changes, remove actions, subtotal, and local persistence across app launches
 - Checkout form with delivery fields, order summary, demo confirmation, and locally saved demo order history
 - Recipe inspiration and profile/help links
-- Empty states, image placeholders, cart-count badge, and add-to-cart toast feedback
+- Empty states with recovery actions, image placeholders, cart-count badge, quantity-limit-aware add-to-cart feedback, and system-back handling
+- Fixed brand palette with light/dark appearance following Android system preference
 
 ## Important prototype limitations
 
