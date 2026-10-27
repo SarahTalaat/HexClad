@@ -56,7 +56,7 @@ fun HomeScreen(viewModel: HexCladViewModel) {
     ) {
         item {
             Column(Modifier.fillMaxWidth().background(Ink).padding(horizontal = 20.dp, vertical = 12.dp)) {
-                Text("FREE SHIPPING ON ORDERS OVER $99", color = Color.White, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                Text("FREE SHIPPING  ·  LIFETIME WARRANTY  ·  UP TO 30% OFF", color = Color.White, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
             }
             Row(
                 Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 18.dp),
