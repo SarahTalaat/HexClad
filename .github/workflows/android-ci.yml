@@ -41,7 +41,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run unit tests and assemble debug APK
-        run: ./gradlew --no-daemon testDebugUnitTest assembleDebug
+        run: ./gradlew --no-daemon --stacktrace testDebugUnitTest assembleDebug
 
       - name: Upload debug APK
         if: success()
