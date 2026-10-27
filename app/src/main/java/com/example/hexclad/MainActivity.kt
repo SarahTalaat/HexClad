@@ -3,6 +3,7 @@ package com.example.hexclad
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.compose.BackHandler
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +32,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             HexCladTheme {
                 val selectedProduct = viewModel.selectedProduct
+
+                BackHandler(enabled = selectedProduct != null || viewModel.currentTab == NavTab.CHECKOUT) {
+                    if (selectedProduct != null) {
+                        viewModel.closeProduct()
+                    } else {
+                        viewModel.switchTab(NavTab.CART)
+                    }
+                }
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
