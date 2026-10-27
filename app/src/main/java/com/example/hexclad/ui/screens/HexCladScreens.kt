@@ -174,7 +174,24 @@ fun ShopScreen(viewModel: HexCladViewModel) {
             }
         }
         if (products.isEmpty()) {
-            Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) { Text("No products found. Try another search.", color = Muted) }
+            Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(24.dp)) {
+                    Text("No products found", color = Ink, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.height(6.dp))
+                    Text("Try another search or clear your filters.", color = Muted)
+                    Spacer(Modifier.height(14.dp))
+                    OutlinedButton(
+                        onClick = {
+                            viewModel.searchQuery = ""
+                            viewModel.selectedCategory = "All"
+                            viewModel.saleOnly = false
+                            viewModel.sortMode = SortMode.RECOMMENDED
+                        }
+                    ) {
+                        Text("CLEAR FILTERS", color = Ink, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
