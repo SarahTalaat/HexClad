@@ -168,6 +168,13 @@ fun ShopScreen(viewModel: HexCladViewModel) {
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             placeholder = { Text("Search cookware, knives, and more") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+            trailingIcon = {
+                if (viewModel.searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { viewModel.searchQuery = "" }) {
+                        Icon(Icons.Default.Close, contentDescription = "Clear search")
+                    }
+                }
+            },
             singleLine = true,
             shape = RoundedCornerShape(4.dp)
         )
