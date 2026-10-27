@@ -197,7 +197,10 @@ private fun ProductCard(product: HexCladProduct, viewModel: HexCladViewModel) {
             Spacer(Modifier.height(8.dp))
             Text(money(product.price), color = Ink, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
-            OutlinedButton(onClick = {\n                viewModel.addToCart(product)\n                Toast.makeText(context, "${product.name} added to cart", Toast.LENGTH_SHORT).show()\n            }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(2.dp), contentPadding = PaddingValues(vertical = 8.dp)) {
+            OutlinedButton(onClick = {
+                viewModel.addToCart(product)
+                Toast.makeText(context, "${product.name} added to cart", Toast.LENGTH_SHORT).show()
+            }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(2.dp), contentPadding = PaddingValues(vertical = 8.dp)) {
                 Icon(Icons.Default.ShoppingBag, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(6.dp))
                 Text("ADD TO CART", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
