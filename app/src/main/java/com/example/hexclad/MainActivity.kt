@@ -32,9 +32,11 @@ class MainActivity : ComponentActivity() {
             HexCladTheme {
                 val selectedProduct = viewModel.selectedProduct
 
-                BackHandler(enabled = selectedProduct != null || viewModel.currentTab == NavTab.CHECKOUT) {
+                BackHandler(enabled = selectedProduct != null || viewModel.currentTab == NavTab.CHECKOUT || viewModel.currentTab == NavTab.RECIPES) {
                     if (selectedProduct != null) {
                         viewModel.closeProduct()
+                    } else if (viewModel.currentTab == NavTab.RECIPES) {
+                        viewModel.switchTab(NavTab.HOME)
                     } else {
                         viewModel.switchTab(NavTab.CART)
                     }
