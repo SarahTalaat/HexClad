@@ -29,16 +29,16 @@ Reference pages:
 
 | Area | Current status | Notes |
 |---|---|---|
-| Home | Partial demo | Native Compose hero, promotional strip, and featured products. It is not yet a complete screen-by-screen reproduction of all audited mobile sections. |
-| Shop/search | Functional local demo | 17-item static catalog; searches product name, subtitle, description, and category; scrollable category chips (including Sets); recommended and ascending/descending price sorting. Data is not a live feed. |
-| Product details | Functional local demo | Product photo when a URL is available, fallback placeholder, quantity selector capped at 99, wishlist toggle, sale labels for selected products, and add-to-cart. Full galleries, zoom, variants, reviews, and verified specifications are not implemented. |
-| Cart | Functional local demo | Quantity changes, removal, subtotal, and cart persistence across app launches via SharedPreferences. Live discounts, shipping/tax calculations, and official checkout are not connected. |
+| Home | Partial demo | Native Compose hero, promotional strip, featured products, and access to the Cooking Club screen. It is not yet a complete screen-by-screen reproduction of all audited mobile sections. |
+| Shop/search | Functional local demo | 17-item static catalog; searches product name, subtitle, description, and category; scrollable category chips (including Sets); an on-sale filter; and recommended/ascending/descending price sorting. Data is not a live feed. |
+| Product details | Functional local demo | Product photo with fallback placeholder, quantity selector capped at 99, wishlist toggle, selected sale labels, accurate cart-limit feedback, and external policy links. Full galleries, zoom, variants, native reviews, and verified specifications are not implemented. |
+| Cart | Functional local demo | Quantity changes capped at 99 per product, removal, subtotal, persistent cart, and item-count badge. Live discounts, shipping/tax calculations, and official checkout are not connected. |
 | Wishlist | Functional local demo | Saved products persist across app launches via SharedPreferences. |
 | Recipes/editorial | Proposal/demo | Three sample recipe cards provide navigation to Shop; editorial content is not a complete reproduction of the current site's recipe experience. |
 | Account | Placeholder/demo | Profile actions explain which services are not integrated. Locally saved demo orders are shown as demo history; sign-in, registration, and real customer orders are not connected. |
 | Checkout/payment | Local demo only | Requires name, a well-formed email, street address, city/region, and postal code. Confirmation saves a local demo order and clears the local cart; no order is sent and no payment is processed. |
 | Assets/catalog data | Partially verified | Selected set imagery and compare-at values were matched to public HexClad/Shopify listings. Other image references and the remaining catalog still require validation; all values are non-live snapshots. |
-| Native build | Not verified | No Gradle build or emulator run was performed during this update. CI and unit tests were intentionally not run, per the task instructions. |
+| Native build | Not verified | No Gradle build or emulator run was performed during this update. CI and unit tests were intentionally not run, per the task instructions. Static source review is not a substitute for a successful Android build. |
 
 ## Next implementation gates
 
