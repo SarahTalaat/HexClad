@@ -87,13 +87,50 @@ Your rules.", color = Color.White, style = MaterialTheme.typography.displaySmall
             }
         }
         item {
-            Row(Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, top = 26.dp, bottom = 14.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("BEST SELLERS", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black, color = Ink)
-                TextButton(onClick = { viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.SHOP) }) { Text("SHOP ALL", color = Ink) }
+            Column(Modifier.fillMaxWidth().padding(top = 24.dp)) {
+                Text(
+                    "SHOP BY CATEGORY",
+                    Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Black,
+                    color = Ink
+                )
+                Row(
+                    Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    listOf("Sets", "Cookware", "Knives", "Accessories").forEach { category ->
+                        Surface(
+                            modifier = Modifier.clip(RoundedCornerShape(4.dp)).clickable {
+                                viewModel.selectedCategory = category
+                                viewModel.searchQuery = ""
+                                viewModel.saleOnly = false
+                                viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.SHOP)
+                            },
+                            color = Color.White,
+                            contentColor = Ink,
+                            shape = RoundedCornerShape(4.dp),
+                            tonalElevation = 1.dp
+                        ) {
+                            Text(
+                                category.uppercase(Locale.US),
+                                Modifier.padding(horizontal = 18.dp, vertical = 14.dp),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
             }
         }
         item {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, top = 26.dp, bottom = 14.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("BEST SELLERS", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black, color = Ink)
+                TextButton(onClick = { viewModel.selectedCategory = "All"; viewModel.searchQuery = ""; viewModel.saleOnly = false; viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.SHOP) }) { Text("SHOP ALL", color = Ink) }
+            }
+        }
+        item {
+            Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 viewModel.products.take(2).forEach { product ->
                     Box(Modifier.weight(1f)) { ProductCard(product, viewModel) }
                 }
