@@ -23,6 +23,14 @@ data class HexCladProduct(
 )
 
 data class CartLine(val product: HexCladProduct, val quantity: Int)
+data class DemoOrder(
+    val orderNumber: String,
+    val timestamp: Long,
+    val total: Double,
+    val itemSummary: String,
+    val recipient: String,
+    val paymentMethod: String
+)
 
 class HexCladViewModel(application: Application) : AndroidViewModel(application) {
     var currentTab by mutableStateOf(NavTab.HOME)
@@ -37,9 +45,11 @@ class HexCladViewModel(application: Application) : AndroidViewModel(application)
 
     private val cart = mutableStateListOf<CartLine>()
     private val favorites = mutableStateListOf<String>()
+    private val orders = mutableStateListOf<DemoOrder>()
 
     val cartLines: List<CartLine> get() = cart.toList()
     val favoriteIds: List<String> get() = favorites.toList()
+    val demoOrders: List<DemoOrder> get() = orders.sortedByDescending { it.timestamp }
     val favoriteProducts: List<HexCladProduct> get() = products.filter { it.id in favorites }
     val cartItemCount: Int get() = cart.sumOf { it.quantity }
     val cartSubtotal: Double get() = cart.sumOf { it.product.price * it.quantity }
@@ -70,6 +80,7 @@ class HexCladViewModel(application: Application) : AndroidViewModel(application)
 
     init {
         restoreShoppingState()
+        restoreDemoOrders()
     }
 
     private fun restoreShoppingState() {
@@ -87,6 +98,51 @@ class HexCladViewModel(application: Application) : AndroidViewModel(application)
                 if (quantity > 0) cart.add(CartLine(product, quantity.coerceAtMost(99)))
             }
         }
+    }
+
+    private fun restoreDemoOrders() {
+        runCatching {
+            val array = JSONArray(preferences.getString("demo_orders", "[]") ?: "[]")
+            for (index in 0 until array.length()) {
+                val item = array.optJSONObject(index) ?: continue
+                orders.add(
+                    DemoOrder(
+                        orderNumber = item.optString("number"),
+                        timestamp = item.optLong("timestamp"),
+                        total = item.optDouble("total"),
+                        itemSummary = item.optString("items"),
+                        recipient = item.optString("recipient"),
+                        paymentMethod = item.optString("payment")
+                    )
+                )
+            }
+        }
+    }
+
+    fun recordDemoOrder(recipient: String, paymentMethod: String) {
+        if (cart.isEmpty()) return
+        val order = DemoOrder(
+            orderNumber = "DEMO-${System.currentTimeMillis().toString().takeLast(8)}",
+            timestamp = System.currentTimeMillis(),
+            total = cartSubtotal,
+            itemSummary = cart.joinToString { "${it.quantity} × ${it.product.name}" },
+            recipient = recipient,
+            paymentMethod = paymentMethod
+        )
+        orders.add(order)
+        val array = JSONArray()
+        orders.forEach { saved ->
+            array.put(
+                JSONObject()
+                    .put("number", saved.orderNumber)
+                    .put("timestamp", saved.timestamp)
+                    .put("total", saved.total)
+                    .put("items", saved.itemSummary)
+                    .put("recipient", saved.recipient)
+                    .put("payment", saved.paymentMethod)
+            )
+        }
+        preferences.edit().putString("demo_orders", array.toString()).apply()
     }
 
     private fun persistCart() {
