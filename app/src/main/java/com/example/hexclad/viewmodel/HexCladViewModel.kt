@@ -84,7 +84,7 @@ class HexCladViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun restoreShoppingState() {
-        val savedFavorites = preferences.getStringSet("favorites", emptySet()).orEmpty()
+        val savedFavorites = preferences.getStringSet("favorites", mutableSetOf<String>()).orEmpty()
         favorites.addAll(savedFavorites.filter { id -> products.any { it.id == id } })
 
         val savedCart = preferences.getString("cart", "[]") ?: "[]"
