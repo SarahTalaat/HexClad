@@ -25,7 +25,7 @@ Native Android shopping-app prototype built with Kotlin, Jetpack Compose, Materi
 
 - This is a native Android app; the UI is not a WebView or a React app.
 - Catalog entries are a curated sample, not a live product feed. Prices are illustrative snapshots and may change.
-- Product photography is loaded remotely from HexClad/Shopify image CDNs. The UI falls back to a placeholder when an image URL is missing or a request fails; network access is required for remote images.
+- All 17 sample catalog entries currently have a remote HexClad/Shopify image URL configured. The UI falls back to a placeholder if a URL is missing or an image request fails; network access is required, and the complete image set has not been runtime-verified.
 - A few image URLs, sale labels, and comparison prices were matched to public HexClad product/collection listings during this update. The catalog remains a non-live snapshot: prices, offers, availability, and image URLs can change, and the remaining image references should be verified before release.
 - Cart, wishlist, and local demo order history are stored on-device using app preferences. They are not synced to an account or server.
 - Checkout is explicitly a local demo. It does not submit an order, collect card details, or process payments.
