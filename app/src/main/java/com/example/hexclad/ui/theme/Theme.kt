@@ -43,8 +43,8 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 /**
- * Uses a fixed HexClad palette rather than Android dynamic colors so the brand appearance
- * remains consistent across devices. Dark mode follows the system setting.
+ * Uses the fixed HexClad brand palette rather than Android dynamic colors. The app defaults
+ * to the light storefront appearance; a caller can explicitly opt into the dark scheme.
  */
 @Composable
 fun HexCladTheme(
