@@ -411,7 +411,7 @@ fun ProfileScreen(viewModel: HexCladViewModel) {
             text = {
                 Text(when (selected) {
                     "Sign in or create an account" -> "Live account creation and sign-in require HexClad's approved authentication integration. No account has been created or authenticated."
-                    "Order history" -> "Order history is unavailable in guest prototype mode because no customer account or commerce API is connected."
+                    "Order history" -> if (viewModel.demoOrders.isEmpty()) "No demo orders yet. Orders created in this prototype will appear here; this is not the live HexClad account order history." else viewModel.demoOrders.joinToString(separator = "\n\n") { order -> "${order.orderNumber} · ${money(order.total)}\n${order.itemSummary}\nRecipient: ${order.recipient}\nPayment: ${order.paymentMethod} (demo)" }
                     "Shipping & returns" -> "Open HexClad's official policy page in your browser to review current shipping and return terms."
                     "Warranty information" -> "Open HexClad's official warranty page in your browser to review current coverage."
                     else -> "Open HexClad's official support page in your browser."
@@ -540,9 +540,10 @@ fun CheckoutScreen(viewModel: HexCladViewModel) {
         AlertDialog(
             onDismissRequest = { showConfirmation = false },
             title = { Text("Demo order complete") },
-            text = { Text("Thanks, $fullName. This is a local prototype confirmation only. No order was sent to HexClad and no payment was processed.") },
+            text = { Text("Thanks, $fullName. A local demo order will be saved on this device using $paymentMethod. No order is sent to HexClad and no payment is processed.") },
             confirmButton = {
                 TextButton(onClick = {
+                    viewModel.recordDemoOrder(fullName, paymentMethod)
                     viewModel.clearCart()
                     showConfirmation = false
                     viewModel.switchTab(com.example.hexclad.viewmodel.NavTab.HOME)
