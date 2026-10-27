@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        if (selectedProduct == null) {
+                        if (selectedProduct == null && viewModel.currentTab != NavTab.CHECKOUT) {
                             NavigationBar(
                                 containerColor = MaterialTheme.colorScheme.surface,
                                 tonalElevation = 8.dp
@@ -145,6 +145,7 @@ class MainActivity : ComponentActivity() {
                                 NavTab.WISHLIST -> WishlistScreen(viewModel = viewModel)
                                 NavTab.CART -> CartScreen(viewModel = viewModel)
                                 NavTab.PROFILE -> ProfileScreen(viewModel = viewModel)
+                                NavTab.CHECKOUT -> CheckoutScreen(viewModel = viewModel)
                             }
                         }
                     }
